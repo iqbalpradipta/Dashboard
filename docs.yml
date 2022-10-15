@@ -1,0 +1,1025 @@
+openapi: 3.0.3
+info:
+  title: Dashboard Immersive Project
+  version: 1.0.0
+  description: Dashboard Immersive Project
+  termsOfService: https://example.com/terms/
+  contact:
+    name: API Support
+    url: https://www.example.com/support
+    email: support@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  url: https://academy.alterra.id
+  description: dokumentasi lengkap
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DianNurdiana-alt/Dashboard-Immersive/1.0.0
+  - url: http://0.0.0.0:5000
+  
+    variables:
+      environment: 
+        default: dev
+        enum:
+          - "prod"
+          - "dev"
+tags:
+  - name: Login
+    description: "Manajemen data login"
+  - name: User
+    description: "Manajemen data user"
+  - name: Mentee
+    description: "Manajemen data mentee"
+  - name: Class
+    description: "Manajemen data class"
+
+paths:
+# LOGIN #
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login user
+      description: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestLogin'
+            examples:
+              data:
+                description: "Example data login"
+                value: {
+                  email: "john@gmail.com",
+                  password: "john123",
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData:
+                  description: response success
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "Login success",
+                     data: {
+                      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData:
+                  description: response failed
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "Login failed"
+                  }
+
+# USER #
+  /users:
+    post:
+      tags:
+        - User
+      summary: Add user
+      description: Add user
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/requestUser'
+            examples:
+              data:
+                description: "Example data user"
+                value: 
+                  fullname: "John"
+                  email: "john@gmail.com"
+                  password: "john123"
+                  team: "admission"
+                  role: "admin"
+                  status: "active"
+                
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData:
+                  description: response success
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "insert data success",
+                      data: {
+                        id: 1,
+                        email: "john@gmail.com",
+                        password: "john123",
+                        team: "admission",
+                        role: "admin",
+                        status: "active",
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData:
+                  description: response failed
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "insert data failed"
+                  }
+    get:
+      tags:
+        - User
+      summary: Get all user data
+      description: Get all user data
+      security:
+        - JWTAuth: []     
+      responses:
+        '200':
+          $ref: '#/components/responses/getUserSuccess'
+        '400':
+          $ref: '#/components/responses/getUserFailed'
+    put:
+      tags:
+        - User
+      summary: Edit user data
+      description: Edit user data
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                  example: "John"
+                email:
+                  type: string
+                  example: "john@gmail.com"
+                team:
+                  type: string
+                  example: "people"
+                role:
+                  type: string
+                  example: "default"
+                status:
+                  type: string
+                  example: "active"
+      responses:
+        '200':
+          $ref: '#/components/responses/updateSuccess'
+        '400':
+          $ref: '#/components/responses/updateFailed'
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      description: Delete user
+      security:
+        - JWTAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteSuccess'
+        '400':
+          $ref: '#/components/responses/deleteFailed'
+
+# MENTEE #
+  /mentee:
+    post:
+      summary: "Add new mentee"
+      tags:
+        - Mentee
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              $ref: '#/components/schemas/requestMentee'
+            example:
+              name: "john"
+              address: "jakarta"
+              homeaddress: "jakarta"
+              email: "john@gmail.com"
+              gender: "male"
+              telegram: "john123"
+              phone: "08123456"
+              emergencyname: "jane"     
+              emergencyphone: "08123456"
+              emergencystatus: "orang tua"
+              educationtype: "informatics"
+              educationmajor: "IPA"
+              educationgraduate: "SMAN 4 Jakarta"
+      responses:
+        200:
+          description: "Success add new mentee"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/responses/createDataSuccess'
+              example:
+                message: "success insert data"
+                data:
+                  id: 2
+                  name: "john"
+                  address: "jakarta"
+                  homeaddress: "jakarta"
+                  email: "john@gmail.com"
+                  gender: "male"
+                  telegram: "john123"
+                  phone: "08123456"
+                  emergencyname: "jane"     
+                  emergencyphone: "08123456"
+                  emergencystatus: "orang tua"
+                  educationtype: "informatics"
+                  educationmajor: "IPA"
+                  educationgraduate: "SMAN 4 Jakarta"
+        400:
+          $ref: '#/components/responses/createDataFailed'
+    get:
+      tags:
+        - Mentee
+      summary: Get mentee data
+      description: Get mentee data
+      security:
+        - JWTAuth: []  
+      parameters:
+      - in: query
+        name: all class
+        schema:
+          type: string
+          example: QE 7
+        required: false 
+      - in: query
+        name: all status
+        schema:
+          type: string
+          example: placement
+        required: false
+      - in: query
+        name: all category
+        schema:
+          type: string
+          example: IT
+        required: false    
+      responses:
+        '200':
+          $ref: '#/components/responses/getMenteeSuccess'
+        '400':
+          $ref: '#/components/responses/getMenteeFailed'
+  /mentee/{id}:
+    put:
+      tags:
+        - Mentee
+      parameters:
+        - name: id
+          description: id_mentee
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      summary: Edit mentee data
+      description: Edit mentee data
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                  example: "John"
+                status:
+                  type: string
+                  example: "active"
+                class:
+                  type: string
+                  example: "BE 11"
+                category:
+                  type: string
+                  example: "IT"
+                gender:
+                  type: string
+                  example: "male"
+      responses:
+        '200':
+          $ref: '#/components/responses/updateSuccess'
+        '400':
+          $ref: '#/components/responses/updateFailed'
+    delete:
+      tags:
+        - Mentee
+      summary: Delete mentee
+      description: Delete mentee
+      parameters:
+        - name: id
+          description: id_mentee
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      security:
+        - JWTAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteSuccess'
+        '400':
+          $ref: '#/components/responses/deleteFailed'
+  /mentee/log:
+    post:
+      summary: "Add log mentee"
+      tags:
+        - Mentee
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              $ref: '#/components/schemas/requestLog'
+            example:
+              status: "Repeat section 1"
+              date: "sept 29, 2022"
+              feedback: "Repeat section 1"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/responses/createDataSuccess'
+              example:
+                message: "Success add class"
+                data:
+                  status: "Repeat section 1"
+                  date: "sept 29, 2022"
+                  feedback: "Repeat section 1"
+        400:
+          $ref: '#/components/responses/createDataFailed'
+
+# CLASS #  
+  /class:
+    post:
+      summary: "Add class"
+      tags:
+        - Class
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              $ref: '#/components/schemas/requestClass'
+            example:
+              name: "Back End Engineer Batch 11"
+              total: 23
+              start class: 10 July 2022
+              end class: 20 October 2022
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/responses/createClassSuccess'
+              example:
+                message: "Success add class"
+                data:
+                  id: 2
+                  name: "Back End Engineer Batch 11"
+                  total: 23
+                  awal kelas: 10 July 2022
+                  akhir kelas: 20 October 2022
+        400:
+          $ref: '#/components/responses/createClassFailed'
+    get:
+      tags:
+        - Class
+      security:
+        - JWTAuth: []
+      summary: Get list class
+      description: Get list class
+      responses:
+        '200':
+          $ref: '#/components/responses/getClassSuccess'
+        '400':
+          $ref: '#/components/responses/getClassFailed'
+  /class/{id}:  
+    put:
+      tags:
+        - Class
+      summary: Edit class data
+      description: Edit class data
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id_class
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Front End Engineer Batch 7"
+            examples:
+              classData:
+                description: "Example data class"
+                value: {
+                  name: "Front End Engineer Batch 9"
+                }
+      responses:
+        '200':
+          $ref: '#/components/responses/updateSuccess'
+        '400':
+          $ref: '#/components/responses/updateFailed'
+    delete:
+      tags:
+        - Class
+      summary: Delete class
+      description: Delete class
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id_class
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteSuccess'
+        '400':
+          $ref: '#/components/responses/deleteFailed'
+
+
+########## COMPONENT ##########
+
+components:
+
+# JWT Schema
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+
+# Schema
+  schemas:
+    requestLogin:
+      type: object
+      properties:
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+    
+    requestUser:
+      type: object
+      properties:
+        "fullname":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1 
+        "password":
+          type: string
+          minLength: 1 
+        "team":
+          type: string
+          minLength: 1 
+        "role":
+          type: string
+          minLength: 1 
+        "status":
+          type: string 
+          minLength: 1 
+    responseUser: 
+      type: object
+      properties:
+        "id":
+          type: number
+          minLength: 1
+        "fullname":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1 
+        "team":
+          type: string
+          minLength: 1 
+        "role":
+          type: string
+          minLength: 1 
+        "status":
+          type: string 
+          minLength: 1 
+    
+    requestMentee:
+      type: object
+      properties:
+        "fullname":
+          type: string
+          minLength: 1 
+        "address":
+         type: string
+         minLength: 1 
+        "homeaddress":
+          type: string
+          minLength: 1 
+        "email":
+          type: string
+          minLength: 1 
+        "gender":
+          type: string
+          minLength: 1 
+        "phone":
+          type: string
+          minLength: 1 
+        "telegram":
+          type: string 
+          minLength: 1 
+        "discord":
+          type: string
+          minLength: 1 
+        "status":
+          type: string
+          minLength: 1 
+        "class":
+          type: string
+          minLength: 1 
+        "category":
+          type: string
+          minLength: 1 
+        "educationtype":
+          type: string
+          minLength: 1 
+        "major":
+          type: string
+          minLength: 1 
+        "graduate":
+          type: string
+          minLength: 1 
+        "emergencyname":
+          type: string
+          minLength: 1 
+        "emergencyphone":
+          type: string
+          minLength: 1 
+        "emergencystatus":
+          type: string
+          minLength: 1 
+    
+    requestLog:
+      type: object
+      properties:
+        status:
+          type: string
+        date:
+          type: string
+        feedback:
+          type: string
+    requestClass:
+      type: object
+      properties:
+        name:
+          type: string
+        total:
+          type: integer
+        start class:
+          type: string
+        end class:
+          type: string
+        
+    successResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        }
+      }
+    failedResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        }
+      }
+
+########## RESPONSES ##########
+  responses :
+
+# RESPONSES GET USER
+    getUserSuccess:
+      description: succes get data user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: succes get data user
+              data:
+                type: object
+                properties:
+                  fullname:
+                    type: string
+                    example: John
+                  email:
+                    type: string
+                    example: john@gmail.com
+                  team:
+                    type: string
+                    example: people
+                  role:
+                    type: string
+                    example: default
+                  status:
+                    type: string
+                    example: active
+    getUserFailed:
+      description: error get data user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: error get data user
+
+# RESPONSES ADD USER
+    addUserSuccess:
+      description: succes insert data user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success insert data user
+    addUserFailed:
+      description: error insert data user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: error insert data user
+          
+
+# RESPONSES ADD DATA
+    createDataSuccess:
+      description: success insert data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success insert data
+    createDataFailed:
+      description: error insert data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: error insert data
+
+# RESPONSES GET MENTEE
+    getMenteeSuccess:
+      description: success get data mentee
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: succes get data mentee
+              data:
+                type: object
+                properties:
+                  fullname:
+                    type: string
+                    example: John
+                  status:
+                    type: string
+                    example: active
+                  class:
+                    type: string
+                    example: BE 11
+                  category:
+                    type: string
+                    example: IT
+                  gender:
+                    type: string
+                    example: male
+    getMenteeFailed:
+      description: error get data mentee
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: error get data mentee
+
+# RESPONSES GET CLASS
+    getClassSuccess:
+      description: succes get data class
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: succes get data class
+              data: 
+                type: object
+                properties: 
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: Back End Engineer Batch 11
+                  total:
+                    type: string
+                    example: 23
+    getClassFailed:
+      description: error get data class
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: error get data class
+          
+# RESPONSES UPDATE DATA
+    updateSuccess:
+      description: success update data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success update data
+    updateFailed:
+      description: failed update data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example:  failed update data
+
+# RESPONSES DELETE
+    deleteSuccess:
+      description: success delete
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success delete
+    deleteFailed:
+      description: delete failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: delete failed
+
+# RESPONSES ADD CLASS
+    createClassSuccess:
+      description: success insert data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: succes get data user
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Back End Engineer Batch 11
+                  total:
+                    type: integer
+                    example: 23
+                  start class:
+                    type: string
+                    example: 10 July 2022
+                  end class:
+                    type: string
+                    example: 10 October 2022
+    createClassFailed:
+      description: error insert data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: succes insert data
+              data:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: repeat section 1
+                  date:
+                    type: string
+                    example: john@gmail.com
+
+# RESPONSE GENERAL
+    responseSuccess:
+      description: success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success
+    responseFailed:
+      description: failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Bad Request
